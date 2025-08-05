@@ -23,7 +23,7 @@ jobs:
 
     - name: Build mac-locked
       run: |
-        swiftc -o mac-locked mac-locked.swift
+        xcrun swiftc -o mac-locked mac-locked.swift
 
     - name: Create release archive
       run: |
