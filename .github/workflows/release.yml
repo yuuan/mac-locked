@@ -1,0 +1,46 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Swift
+      uses: swift-actions/setup-swift@v2
+      with:
+        swift-version: '5.9'
+
+    - name: Build mac-locked
+      run: |
+        swiftc -o mac-locked mac-locked.swift
+
+    - name: Create release archive
+      run: |
+        tar -czf mac-locked-macos.tar.gz mac-locked
+
+    - name: Create checksum
+      run: |
+        shasum -a 256 mac-locked-macos.tar.gz > mac-locked-macos.tar.gz.sha256
+
+    - name: Upload to GitHub Releases
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          mac-locked-macos.tar.gz
+          mac-locked-macos.tar.gz.sha256
+        generate_release_notes: true
+        draft: true
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
