@@ -1,0 +1,16 @@
+version: '3'
+
+tasks:
+  run:
+    desc: run mac-locked
+    deps:
+      - build
+    cmd: ./mac-locked
+
+  build:
+    desc: build mac-locked
+    sources:
+      - mac-locked.swift
+    generates:
+      - mac-locked
+    cmd: swiftc -o mac-locked mac-locked.swift
